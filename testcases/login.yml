@@ -1,0 +1,116 @@
+config:
+    name: login system
+    variables:
+        password: ${ENV(PASSWORD)}
+        phone: ${ENV(USERNAME)}
+    verify: False
+    base_url: ${get_base_url()}
+
+teststeps:
+-   name: /
+    request:
+        headers:
+            user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36
+                (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+        method: GET
+        url: /
+    validate:
+    -   eq:
+        - status_code
+        - 200
+-   name: /login
+    request:
+        headers:
+            user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36
+                (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+        method: GET
+        url: /login
+    validate:
+    -   eq:
+        - status_code
+        - 200
+-   name: /api/login/submit
+    variables:
+        phone: $phone
+        password: $password
+    api: api/login_submit.yml
+    validate:
+    -   eq:
+        - content.code
+        - 0
+    -   eq:
+        - content.msg
+        - null
+-   name: /list
+    request:
+        headers:
+            user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36
+                (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+        method: GET
+        url: /list
+    validate:
+    -   eq:
+        - status_code
+        - 200
+-   name: /api/list/tip_new_update
+    request:
+        data: ''
+        headers:
+            user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36
+                (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+            x-requested-with: XMLHttpRequest
+        method: POST
+        url: /api/list/tip_new_update
+    validate:
+    -   eq:
+        - status_code
+        - 200
+    -   eq:
+        - content.code
+        - 0
+    -   eq:
+        - content.msg
+        - null
+-   name: /api/list/get
+    request:
+        data:
+            folderId: '0'
+            keywords: ''
+            sort: name
+            source: ''
+        headers:
+            content-type: application/x-www-form-urlencoded; charset=UTF-8
+            user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36
+                (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+            x-requested-with: XMLHttpRequest
+        method: POST
+        url: /api/list/get
+    validate:
+    -   eq:
+        - status_code
+        - 200
+    -   eq:
+        - content.code
+        - 0
+    -   eq:
+        - content.msg
+        - null
+-   name: /api/message/get_message_unread
+    request:
+        data: ''
+        headers:
+            user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36
+                (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+            x-requested-with: XMLHttpRequest
+        method: POST
+        url: /api/message/get_message_unread
+    validate:
+    -   eq:
+        - status_code
+        - 200
+    -   eq:
+        - content.code
+        - 0
+    -   eq:
+        - content.msg
+        - null
